@@ -4,6 +4,7 @@ import authRoutes from "./routes/userRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 dotenv.config()
 
@@ -20,9 +21,15 @@ app.use(cookieParser());
 
 app.use("/api/users", authRoutes);
 
-app.get("/", (req, res) => {
-    res.send("Server is running.")
-})
+if (process.env.NODE_ENV === "production") {
+    const __dirname = path.resolve();
+    app.use(express.static(path.join(__dirname, "frontend/dist")));
+    app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, "frontend", "dist", "index.html")));
+} else {
+    app.get("/", (req, res) => {
+        res.send("Server is running.")
+    })
+}
 
 app.use(notFound);
 app.use(errorHandler);
