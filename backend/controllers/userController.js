@@ -77,6 +77,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         const updatedUser = await user.save();
 
         res.status(200).json({
+            message: "User profile updated successfully",
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email
@@ -85,8 +86,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("User not found");
     }
-
-    res.status(200).json({ message: "User profile updated" })
 })
 
 export { authUser, registerUser, logoutUser, getUserProfile, updateUserProfile };
